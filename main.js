@@ -4,14 +4,14 @@ const varFind = function(predicate, array, object) {
 		const path = []; // The current path being searched
 		const results = []; // The array of paths that satify the predicate === true
 		if (!obj && (typeof obj !== "object" || Array.isArray(obj))) {
-			throw new TypeError("First argument of finPropPath is not the correct type Object");
+			throw new TypeError("First argument of varFind is not an object");
 		}
 		if (typeof predicate !== "function") {
 			throw new TypeError("Predicate is not a function");
 		}
 		(function find(obj) {
 			for (const key of Object.keys(obj)) { // use only enumrable own properties.
-				if (predicate(key, path, obj) === true) { // Found a path
+				if (predicate(key, obj, path) === true) { // Found a path
 					path.push('["' + key + '"]'); // push the key
 					results.push(path.join("")); // Add the found path to results
 					path.pop(); // remove the key.
