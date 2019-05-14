@@ -11,7 +11,7 @@ const varFind = function(predicate, array, object) {
 			throw new TypeError("Predicate is not a function");
 		}
 		(function find(obj) {
-			if(counter !== 500) {
+			if(counter !== 10000) {
 				try {	
 					counter++;
 					for (const key of Object.keys(obj)) { // use only enumrable own properties.
