@@ -11,30 +11,30 @@ const varFind = function(predicate, array, object) {
 			throw new TypeError("Predicate is not a function");
 		}
 		(function find(obj) {
-			if(counter !== 10000) {
-				try {	
-					counter++;
-					for (const key of Object.keys(obj)) { // use only enumrable own properties.
-						if (predicate(key, obj, path) === true) { // Found a path
-							path.push('["' + key + '"]'); // push the key
-							results.push(path.join("")); // Add the found path to results
-							path.pop(); // remove the key.
-						}
-						const o = obj[key]; // The next object to be searched
-						if (o && typeof o === "object") { // check for null then type object
-							if (!discoveredObjects.find(obj => obj === o)) { // check for cyclic link
-								path.push('["' + key + '"]');
-								discoveredObjects.push(o);
-								find(o);
-								path.pop();
-							}
-						}
-					}
-				}
-				catch(e){
-
-				}
-			}
+			setTimeout(function() {
+  			try {	
+  				counter++;
+  				for (const key of Object.keys(obj)) { // use only enumrable own properties.
+  					if (predicate(key, obj, path) === true) { // Found a path
+  						path.push('["' + key + '"]'); // push the key
+  						results.push(path.join("")); // Add the found path to results
+  						path.pop(); // remove the key.
+  					}
+  					const o = obj[key]; // The next object to be searched
+  					if (o && typeof o === "object") { // check for null then type object
+  						if (!discoveredObjects.find(obj => obj === o)) { // check for cyclic link
+  							path.push('["' + key + '"]');
+  							discoveredObjects.push(o);
+  							find(o);
+  							path.pop();
+  						}
+  					}
+  				}
+  			}
+  			catch(e){
+  
+  			}
+			}, 1);
 		}(obj));
 		for (var i in results) {
 			results[i] = "window" + results[i]
