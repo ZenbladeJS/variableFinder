@@ -3,6 +3,7 @@ const varFind = function(predicate, array, object) {
 		const discoveredObjects = []; // For checking for cyclic object
 		const path = []; // The current path being searched
 		const results = []; // The array of paths that satify the predicate === true
+		var counter = 0;
 		if (!obj && (typeof obj !== "object" || Array.isArray(obj))) {
 			throw new TypeError("First argument of varFind is not an object");
 		}
@@ -10,7 +11,11 @@ const varFind = function(predicate, array, object) {
 			throw new TypeError("Predicate is not a function");
 		}
 		(function find(obj) {
-			try {
+			if(counter === 500) {
+				break;
+			}
+			try {	
+				counter++;
 				for (const key of Object.keys(obj)) { // use only enumrable own properties.
 					if (predicate(key, obj, path) === true) { // Found a path
 						path.push('["' + key + '"]'); // push the key
