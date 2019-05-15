@@ -62,4 +62,4 @@ const varFind = function(predicate, array, object) {
 	} else {
 		return similarities(paths[0], paths[1]);
 	}
-};
+}
