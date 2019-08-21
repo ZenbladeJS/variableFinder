@@ -26,11 +26,13 @@ const varFind = function(predicate, object) {
 				}
 				const o = obj[key]; // The next object to be searched
 				if (o && typeof o === "object" && !isElement(o)) { // check for null then type object
-					if (!discoveredObjects.find(obj => obj === o)) { // check for cyclic link
-						path.push('["' + key + '"]');
-						discoveredObjects.push(o);
-						find(o, newCyclicDetect.push(o));
-						path.pop();
+					for(var i in newCyclicDetect) {
+						if (!discoveredObjects.find(obj => obj === o)) { // check for cyclic link
+							path.push('["' + key + '"]');
+							discoveredObjects.push(o);
+							find(o, newCyclicDetect.push(o));
+							path.pop();
+						}
 					}
 				}
 			}
