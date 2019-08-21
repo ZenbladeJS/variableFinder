@@ -1,4 +1,10 @@
 const varFind = function(predicate, object) {
+	if(object == undefined){
+		object = {};
+	}
+	if(object.object == undefined){
+		object.object = window;
+	}
 	const isElement = function (element) {
     		return element instanceof Element || element instanceof HTMLDocument;  
 	}
@@ -20,24 +26,26 @@ const varFind = function(predicate, object) {
 					results.push(path.join("")); // Add the found path to results
 					path.pop(); // remove the key.
 				}
-				var newCyclicDetect = [];
-				if(cyclicDetect && typeof(cyclicDetect) === "object"){
-					newCyclicDetect = cyclicDetect;
-				}
+				var newCyclicDetect = cyclicDetect;
 				const o = obj[key]; // The next object to be searched
-				if (o && typeof o === "object" && !isElement(o)) { // check for null then type object
+				if (o && typeof o === "object" && !isElement(o)) { // check for null, type object, and if element
+					var isCyclic = false;
 					for(var i in newCyclicDetect) {
-						if (!discoveredObjects.find(obj => obj === o)) { // check for cyclic link
-							path.push('["' + key + '"]');
-							discoveredObjects.push(o);
-							find(o, newCyclicDetect.push(o));
-							path.pop();
+						if (newCyclicDetect[i] == o) { // check for cyclic link
+							isCyclic = true;
 						}
+					}
+					if(!isCyclic){
+						path.push('["' + key + '"]');
+						discoveredObjects.push(o);
+						newCyclicDetect.push(o);
+						find(o, newCyclicDetect);
+						path.pop();
 					}
 				}
 			}
 		};
-		find(obj);
+		find(obj, [object.object]);
 		for (var i in results) {
 			results[i] = "window" + results[i]
 		}
