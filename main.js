@@ -21,7 +21,7 @@ const varFind = function(predicate, object) {
 		}
 		const find = function (obj, cyclicDetect) {
 			for (const key of Object.keys(obj)) { // use only enumrable own properties.
-				if (predicate(key, path, obj) === true) { // Found a path
+				if (predicate(key, obj, path) === true) { // Found a path
 					path.push('["' + key + '"]'); // push the key
 					results.push(path.join("")); // Add the found path to results
 					path.pop(); // remove the key.
