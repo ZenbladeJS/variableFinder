@@ -23,8 +23,8 @@ const varFind = function (predicate, object) {
 				path.pop();
 			}
 			var isCyclic = false;
+			const o = obj[key];
 			if (o && typeof o === "object" && !isElement(o)) {
-				const o = obj[key];
 				for(var i in cyclicDetect) {
 					if(cyclicDetect[i] == o) {
 						isCyclic = true;
