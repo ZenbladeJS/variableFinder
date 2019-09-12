@@ -37,6 +37,6 @@ const varFind = function (predicate, object) {
 			path.pop();
 		}
 	}
-	varSearch(object)
+	varSearch(object || window)
 	return results;
 }
