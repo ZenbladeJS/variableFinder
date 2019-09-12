@@ -12,7 +12,7 @@ const varFind = function (predicate, object) {
 		}
 		for (var key of Object.keys(obj)) {
 			path.push(key);
-			if(predicate(obj,  key, path)) {
+			if(predicate(obj,  key, path) === true) {
 				var editedPath = path
 				for (var i in path) {
 					if (i != 0) {
@@ -22,9 +22,9 @@ const varFind = function (predicate, object) {
 				results.push(editedPath.join(""));
 				path.pop();
 			}
-			const o = obj[key];
 			var isCyclic = false;
 			if (o && typeof o === "object" && !isElement(o)) {
+				const o = obj[key];
 				for(var i in cyclicDetect) {
 					if(cyclicDetect[i] == o) {
 						isCyclic = true;
