@@ -20,7 +20,6 @@ const varFind = function (predicate, object) {
 					}
 				}
 				results.push(editedPath.join(""));
-				path.pop();
 			}
 			var isCyclic = false;
 			const o = obj[key];
@@ -35,6 +34,7 @@ const varFind = function (predicate, object) {
 					varSearch(o, path, cyclicDetect);
 				}
 			}
+			path.pop();
 		}
 	}
 	varSearch(object)
