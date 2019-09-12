@@ -1,3 +1,14 @@
+const similarities = function(array1, array2) {
+	var ret = [];
+	array1.sort();
+	array2.sort();
+	for(var i = 0; i < array2.length; i += 1) {
+		if(array1.indexOf(array2[i]) > -1){
+			ret.push(array2[i]);
+		}
+	}
+	return ret;
+}
 const varFind = function (predicate, object) {
 	const results = [];
 	const isElement = function (element) {
@@ -36,6 +47,7 @@ const varFind = function (predicate, object) {
 			}
 			path.pop();
 		}
+		cyclicDetect.pop();
 	}
 	varSearch(object || window)
 	return results;
