@@ -10,7 +10,7 @@ const varFind = function (predicate, object) {
 			];
 			cyclicDetect = [];
 		}
-		for (var key of obj) {
+		for (var key of Object.keys(obj)) {
 			path.push(key);
 			if(predicate(obj,  key, path)) {
 				var editedPath = path
@@ -37,5 +37,6 @@ const varFind = function (predicate, object) {
 			}
 		}
 	}
+	varSearch(object)
 	return results;
 }
