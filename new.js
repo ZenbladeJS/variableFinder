@@ -13,7 +13,7 @@ const varFind = function (predicate, object) {
 		for (var key of Object.keys(obj)) {
 			path.push(key);
 			if(predicate(key, obj, path) === true) {
-				var editedPath = path
+				var editedPath = [...path];
 				for (var i in path) {
 					if (i != 0) {
 						editedPath[i] = "['" + editedPath[i] + "']";
