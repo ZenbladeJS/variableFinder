@@ -24,13 +24,13 @@ const varFind = function (predicate, object) {
 			var isCyclic = false;
 			const o = obj[key];
 			if (o && typeof o === "object" && !isElement(o)) {
+				cyclicDetect.push(obj);
 				for(var i in cyclicDetect) {
 					if(cyclicDetect[i] == o) {
 						isCyclic = true;
 					}
 				}
 				if (!isCyclic) {
-					cyclicDetect.push(obj);
 					varSearch(o, path, cyclicDetect);
 				}
 			}
