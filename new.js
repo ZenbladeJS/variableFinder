@@ -46,8 +46,8 @@ const varFind = function (predicate, object) {
 				}
 			}
 			path.pop();
+			cyclicDetect.pop();
 		}
-		cyclicDetect.pop();
 	}
 	varSearch(object || window)
 	return results;
