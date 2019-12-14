@@ -1,54 +1,88 @@
-const similarities = function(array1, array2) {
-	var ret = [];
-	array1.sort();
-	array2.sort();
-	for(var i = 0; i < array2.length; i += 1) {
-		if(array1.indexOf(array2[i]) > -1){
-			ret.push(array2[i]);
+var varFind = function (predicate, object, layers) {
+	//errors
+	if (typeof(predicate) !== "function") {
+		throw "First agrument is not a function. Example is (key, obj, path) => obj[key] == 234095843.";
+	}
+	if (typeof(object) !== "string") {
+		throw "Second agrument is not a string. Example is \"myObj\".";
+	}
+	if (typeof(layers) !== "number" && layers !== undefined) {
+		throw "Third agrument is not a number. Example is 15.";
+	}
+	var newEval = function (str) {
+		try{
+			return new Function("return " + str + ";")();
+		} catch (e) {
+			return null;
 		}
 	}
-	return ret;
-}
-const varFind = function (predicate, object) {
+	//where result will be stored
 	const results = [];
+	//to prevent cors error
 	const isElement = function (element) {
-		return element instanceof Element || element instanceof HTMLDocument;  
+		try{
+			return element instanceof Element || element instanceof HTMLDocument;
+		} catch(e){
+			return false;
+		}	
 	}
-	const varSearch = function (obj, path, cyclicDetect) {
+	//path finding function
+	const varSearch = function (obj, path, cyclicDetect, layers) {
+		//initial set up
 		if(typeof(path) == "undefined") {
 			path = [
-				"window"
+				(newEval(object) || window) === window ? "window" : object
 			];
 			cyclicDetect = [];
 		}
+		//looping through object
 		for (var key of Object.keys(obj)) {
-			path.push(key);
-			if(predicate(key, obj, path) === true) {
-				var editedPath = [...path];
-				for (var i in path) {
-					if (i != 0) {
-						editedPath[i] = "['" + editedPath[i] + "']";
+			//to prevent errors
+			try {
+				//layers is used more in lag reduction
+				layers = typeof(layers) == "number" ? layers : Infinity;
+				//pushing current key to path
+				path.push(key);
+				//if matches predicate
+				if(predicate(key, obj, path) === true) {
+					//cloning path for modification
+					var editedPath = [...path];
+					//putting in propper formatt
+					for (var i in path) {
+						if (i != 0) {
+							editedPath[i] = "['" + editedPath[i].replace(/'/g, "\\'") + "']";
+						}
 					}
+					//pushing result to results
+					results.push(editedPath.join(""));
 				}
-				results.push(editedPath.join(""));
-			}
-			var isCyclic = false;
-			const o = obj[key];
-			if (o && typeof o === "object" && !isElement(o)) {
-				cyclicDetect.push(obj);
-				for(var i in cyclicDetect) {
-					if(cyclicDetect[i] == o) {
-						isCyclic = true;
+				//to help with cyclic detection
+				var isCyclic = false;
+				//for easier access
+				const o = obj[key];
+				//testing if element to prevent cors error and if it is an object
+				if (o && typeof o === "object" && !isElement(o) && layers != 0) {
+					//pushing object to cyclic detect
+					cyclicDetect.push(obj);
+					for(var i in cyclicDetect) {
+						//checking if cyclic
+						if(cyclicDetect[i] == o) {
+							isCyclic = true;
+						}
 					}
+					//recursion!
+					if (!isCyclic) {
+						varSearch(o, path, cyclicDetect, layers - 1);
+					}
+					//popping cyclicDetect for future objects not in that recursion
+					cyclicDetect.pop(obj);
 				}
-				if (!isCyclic) {
-					varSearch(o, path, cyclicDetect);
-				}
-			}
-			path.pop();
-			cyclicDetect.pop();
+				//popping path for the next possible path
+				path.pop();
+			} catch (e) {}
 		}
 	}
-	varSearch(object || window)
+	//getting results
+	varSearch(newEval(object) || window, undefined, undefined, layers)
 	return results;
 }
